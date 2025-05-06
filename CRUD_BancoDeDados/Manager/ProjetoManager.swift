@@ -29,6 +29,8 @@ enum ProjetoAttributes: String, CaseIterable {
 
 class ProjetoManager {
     static var projetos: [Projeto] = FileHelper.load(from: "projetos.txt")
+    
+    // MARK: Create
 
     static func create(nome: String, local: String, funcionarios: [Funcionario]) {
         let projeto = Projeto(nome: nome, local: local, funcionarios: funcionarios)
@@ -37,6 +39,8 @@ class ProjetoManager {
         projetos.append(projeto)
         FileHelper.save(projetos, to: "projetos.txt")
     }
+    
+    // MARK: Menu
     
     static func menuProjeto() {
         var shouldContinue = true
@@ -71,6 +75,8 @@ class ProjetoManager {
         }
     }
     
+    // MARK: update
+    
     static func updateProjeto(projetoAntigo: Projeto, projetoNovo: Projeto) {
         var projetos: [Projeto] = FileHelper.load(from: "projetos.txt")
         if let index = projetos.firstIndex(where: { $0.nome == projetoAntigo.nome }) {
@@ -101,8 +107,6 @@ class ProjetoManager {
             
         }
     }
-    
-    // MARK: update
     
     static func editAttribute(attribute: ProjetoAttributes, for input: String, projeto: Projeto) -> Projeto {
         var newProjeto: Projeto = projeto
@@ -178,7 +182,6 @@ class ProjetoManager {
         print("4. Retornar \n")
         if let input = readLine(), let choice = Int(input) {
                 if choice == ProjetoAttributes.allCases.count + 1 {
-                    // Usuário escolheu "Retornar"
                     return nil
                 } else if (1...ProjetoAttributes.allCases.count).contains(choice) {
                     return selectAttributeToUpdate(by: choice)
