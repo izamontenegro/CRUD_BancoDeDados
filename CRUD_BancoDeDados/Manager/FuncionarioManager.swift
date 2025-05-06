@@ -6,7 +6,7 @@
 //
 
 class FuncionarioManager {
-    static var funcionarios: [Funcionario] = FileHelper.load(from: "funcionariosss.txt")
+    static var funcionarios: [Funcionario] = FileHelper.load(from: "funcionarios.txt")
 
     static func create(primeiroNome: String, inicialDoMeio: String?, ultimoNome: String, cpf: String, salario: Double, genero: GenderOptions, endereco: String, dataDeNascimento: String, departamento: Departamento?, projetos: [Projeto]?) {
         
