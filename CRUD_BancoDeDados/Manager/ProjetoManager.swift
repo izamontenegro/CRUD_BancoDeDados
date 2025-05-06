@@ -68,11 +68,35 @@ class ProjetoManager {
             case .VerProjeto:
                 print("Ver projeto")
             case .RemoverProjeto:
-                print("Remover projeto")
+                removeProjeto()
             case .Sair:
                 shouldContinue = false
             }
         }
+    }
+    
+    //MARK: remover projeto
+    
+    static func removeProjeto() {
+        if projetos.isEmpty {
+            print("\nNenhum projeto cadastrado.\n")
+            return
+        }
+        print("\nEscolha um projeto para remover: (Digite aqui o número do projeto)\n")
+        for(index, projeto) in projetos.enumerated() {
+            print("\(index + 1). \(projeto.nome)")
+        }
+        print("\n")
+        
+        guard let input = readLine(), let chooseIndex = Int(input),(1...projetos.count).contains(chooseIndex) else {
+            print("\nOpção inválida.\n")
+            return
+        }
+        
+        let projetoRemovido = projetos.remove(at: chooseIndex - 1)
+        FileHelper.save(projetos, to: "projetos.txt")
+        print("\nProjeto \(projetoRemovido.nome) removido com sucesso.\n")
+        
     }
     
     // MARK: update
