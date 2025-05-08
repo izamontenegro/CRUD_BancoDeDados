@@ -116,14 +116,40 @@ class ProjetoManager {
             case .EditarProjeto:
                 update()
             case .VerProjeto:
-                print("Ver projeto")
+                read()
             case .RemoverProjeto:
-                print("Remover projeto")
+                removeProjeto()
             case .Sair:
                 shouldContinue = false
             }
         }
     }
+    
+    //MARK: read
+    static func read() {
+        projetos = FileHelper.load(from: "projetos.txt")
+        
+        if projetos.isEmpty {
+            print("\nNão há projetos cadastrados.\n")
+        } else {
+            print("\n--- Lista de Projetos ---")
+            for (index, projeto) in projetos.enumerated() {
+                print("""
+                    \nProjeto \(index + 1):
+                    Nome: \(projeto.nome)
+                    Local: \(projeto.local)
+                    Funcionários:
+                    \(projeto.funcionarios.isEmpty ? "Nenhum funcionário atribuído" : "")
+                    """)
+                for funcionario in projeto.funcionarios {
+                    print("- \(funcionario.nome.primeiroNome)\(funcionario.nome.inicialDoMeio ?? "") \(funcionario.nome.ultimoNome)")
+                }
+            }
+            print("\n-------------------------\n")
+        }
+    }
+    
+    // MARK: update
     
     static func updateProjeto(projetoAntigo: Projeto, projetoNovo: Projeto) {
         var projetos: [Projeto] = FileHelper.load(from: "projetos.txt")
@@ -197,7 +223,33 @@ class ProjetoManager {
         }
         return outFuncionarios
     }
-
+    
+    //MARK: delete
+    
+    static func removeProjeto() {
+        if projetos.isEmpty {
+            print("\nNenhum projeto cadastrado.\n")
+            return
+        }
+        print("\nEscolha um projeto para remover: (Digite aqui o número do projeto)\n")
+        for(index, projeto) in projetos.enumerated() {
+            print("\(index + 1). \(projeto.nome)")
+        }
+        print("\n")
+        
+        guard let input = readLine(), let chooseIndex = Int(input),(1...projetos.count).contains(chooseIndex) else {
+            print("\nOpção inválida.\n")
+            return
+        }
+        
+        let projetoRemovido = projetos.remove(at: chooseIndex - 1)
+        FileHelper.save(projetos, to: "projetos.txt")
+        print("\nProjeto \(projetoRemovido.nome) removido com sucesso.\n")
+        
+    }
+    
+    // MARK: updateUI
+    
     static func getProjectUI() -> Projeto? {
         if projetos.isEmpty {
             print("\nNão há projetos para atualizar.\n")
