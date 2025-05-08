@@ -15,6 +15,7 @@ enum MenuOpcoes: Int {
 enum ProjetoAttributes: String, CaseIterable {
     case nome
     case local
+    case numero
     case funcionarios
 
     var displayName: String {
@@ -22,28 +23,44 @@ enum ProjetoAttributes: String, CaseIterable {
         case .nome: return "Nome"
         case .local: return "Local"
         case .funcionarios: return "Funcionários"
+        case .numero: return "Número"
         }
     }
 }
 
 class ProjetoManager {
     static var projetos: [Projeto] = FileHelper.load(from: "projetos.txt")
+    static var novoNome: String?
+    static var novoLocal: String?
+    static var novoNumero: Int?
 
     // MARK: Create
     static func create() {
         print("\n--- Criar Novo Projeto ---")
+        
         print("Digite o nome do projeto:")
         guard let nome = readLine(), !nome.isEmpty else {
             print("Nome inválido.\n")
             return
         }
-
+        if projetos.contains(where: { $0.nome.lowercased() == nome.lowercased() }) {
+            print("Já existe um projeto com esse nome.\n")
+            return
+        }
         print("Digite o local do projeto:")
         guard let local = readLine(), !local.isEmpty else {
             print("Local inválido.\n")
             return
         }
-
+        print("Digite o número do projeto:")
+        guard let entrada = readLine(), !entrada.isEmpty, let numero = Int(entrada) else {
+            print("Número inválido.\n")
+            return
+        }
+        if projetos.contains(where: { $0.numero == numero }) {
+            print("Já existe um projeto com esse número.\n")
+            return
+        }
         var funcionariosSelecionados: [Funcionario] = []
         var adicionarMais = true
 
@@ -84,7 +101,7 @@ class ProjetoManager {
             }
         }
 
-        let projeto = Projeto(nome: nome, local: local, funcionarios: funcionariosSelecionados)
+        let projeto = Projeto(nome: nome, local: local, numero: numero, funcionarios: funcionariosSelecionados)
         projetos.append(projeto)
         FileHelper.save(projetos, to: "projetos.txt")
         print("Projeto '\(nome)' criado com sucesso!\n")
@@ -138,6 +155,7 @@ class ProjetoManager {
                     \nProjeto \(index + 1):
                     Nome: \(projeto.nome)
                     Local: \(projeto.local)
+                    Número: \(projeto.numero)
                     Funcionários:
                     \(projeto.funcionarios.isEmpty ? "Nenhum funcionário atribuído" : "")
                     """)
@@ -156,7 +174,6 @@ class ProjetoManager {
         if let index = projetos.firstIndex(where: { $0.nome == projetoAntigo.nome }) {
             projetos[index] = projetoNovo
             FileHelper.save(projetos, to: "projetos.txt")
-            print("Projeto atualizado com sucesso.")
             self.projetos = projetos
         } else {
             print("Projeto não encontrado.")
@@ -164,29 +181,40 @@ class ProjetoManager {
     }
 
     static func update() {
-        var shouldContinue = true
         guard let projeto = getProjectUI() else {
             return
         }
-
-        while shouldContinue {
             guard let attribute = selectAttributeToUpdateUI(projeto: projeto) else {
-                shouldContinue = false
-                continue
+                return
             }
-
             let newProjeto = editAttributeUI(projeto: projeto, attribute: attribute)
             updateProjeto(projetoAntigo: projeto, projetoNovo: newProjeto)
-        }
     }
 
     static func editAttribute(attribute: ProjetoAttributes, for input: String, projeto: Projeto) -> Projeto {
         var newProjeto: Projeto = projeto
         switch attribute {
         case .nome:
+            if projetos.contains(where: { $0.nome.lowercased() == input.lowercased() }) {
+                print("Já existe um projeto com esse nome.\n")
+                return newProjeto
+            }
             newProjeto.nome = input
+            novoNome = input
         case .local:
             newProjeto.local = input
+            novoLocal = input
+        case .numero:
+            guard let numero = Int(input) else {
+                print("Número inválido.")
+                return newProjeto
+            }
+            if projetos.contains(where: { $0.numero == Int(input) }) {
+                print("Já existe um projeto com esse nome.\n")
+                return newProjeto
+            }
+            newProjeto.numero = numero
+            novoNumero = numero
         default:
             break
         }
@@ -269,12 +297,12 @@ class ProjetoManager {
     }
 
     static func selectAttributeToUpdateUI(projeto: Projeto) -> ProjetoAttributes? {
-        print("\nProjeto escolhido: \(projeto.nome)")
+        print("\nProjeto escolhido: \(novoNome != nil ? novoNome! : projeto.nome)")
         print("\nEscolha um atributo para atualizar:")
         for (index, attribute) in ProjetoAttributes.allCases.enumerated() {
             print("\(index + 1). \(attribute.displayName)")
         }
-        print("4. Retornar \n")
+        print("5. Retornar \n")
         if let input = readLine(), let choice = Int(input) {
             if choice == ProjetoAttributes.allCases.count + 1 {
                 return nil
@@ -293,18 +321,25 @@ class ProjetoManager {
     static func editAttributeUI(projeto: Projeto, attribute: ProjetoAttributes) -> Projeto {
         var newProjeto: Projeto = projeto
         if attribute == .nome {
-            print("\nNome atual: \(projeto.nome)")
+            print("\nNome atual: \(novoNome != nil ? novoNome! : projeto.nome)")
             print("Digite o novo \(attribute.displayName):\n")
             if let input = readLine() {
                 newProjeto = editAttribute(attribute: attribute, for: input, projeto: projeto)
             }
         } else if attribute == .local {
-            print("\nLocal atual: \(projeto.local)\n")
+            print("\nLocal atual: \(novoLocal != nil ? novoLocal! : projeto.local)\n")
             print("Digite o novo \(attribute.displayName):\n")
             if let input = readLine() {
                 newProjeto = editAttribute(attribute: attribute, for: input, projeto: projeto)
             }
-        } else {
+        } else if attribute == .numero {
+            print("\nNúmero atual: \(novoNumero != nil ? novoNumero! : projeto.numero)\n")
+            print("Digite o novo \(attribute.displayName):\n")
+            if let input = readLine() {
+                newProjeto = editAttribute(attribute: attribute, for: input, projeto: projeto)
+            }
+        }
+        else {
             newProjeto = editFuncionariosUI(projeto: projeto)
         }
         return newProjeto
