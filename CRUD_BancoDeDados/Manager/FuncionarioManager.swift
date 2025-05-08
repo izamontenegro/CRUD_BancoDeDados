@@ -11,7 +11,7 @@ class FuncionarioManager {
     static func create(primeiroNome: String, inicialDoMeio: String?, ultimoNome: String, cpf: String, salario: Double, genero: GenderOptions, endereco: String, dataDeNascimento: String, departamento: Departamento?, projetos: [Projeto]?) {
         
 
-        let funcionario = Funcionario(nome: NomeFuncionario(primeiroNome: primeiroNome, inicialDoMeio: inicialDoMeio, ultimoNome: ultimoNome), cpf: cpf, salario: salario, endereco: endereco, genero: genero, dataDeNascimento: dataDeNascimento, departamento: departamento, projetos: projetos)
+        let funcionario = Funcionario(nome: NomeFuncionario(primeiroNome: primeiroNome, inicialDoMeio: inicialDoMeio, ultimoNome: ultimoNome), cpf: cpf, salario: salario, endereco: endereco, genero: genero, dataDeNascimento: dataDeNascimento, departamento: departamento ?? nil, projetos: projetos)
 
         funcionarios.append(funcionario)
         FileHelper.save(funcionarios, to: "funcionarios.txt")

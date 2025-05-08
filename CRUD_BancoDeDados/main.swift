@@ -7,16 +7,22 @@
 // MARK: - Models
 import Foundation
 
-//FuncionarioManager.create(primeiroNome: "Maria", inicialDoMeio: nil, ultimoNome: "Silva", cpf: "12345678901", salario: 1500, genero: .female, endereco: "Rua dos Bobos", dataDeNascimento: "01/01/2005", departamento: nil, projetos: nil)
-//
-//// da pra tentar filtrar o funcionario por nome, cpf sla
-//ProjetoManager.create(nome: "Projeto 1", local: "Casa", funcionarios: [FuncionarioManager.funcionarios[0]])
-//
-//DepartamentoManager.create(nome: "Financas", projetos: [ProjetoManager.projetos[0]], nomeFuncionarioGerente: "Izadora")
-//ProjetoManager.update()
-//FuncionarioManager.create(primeiroNome: "AAAA", inicialDoMeio: nil, ultimoNome: "Montenegro", cpf: "02902713207", salario: 1500, genero: .female, endereco: "Senador pompeu", dataDeNascimento: "06/12/2005", departamento: nil, projetos: nil)
-//FuncionarioManager.create(primeiroNome: "BBBB", inicialDoMeio: nil, ultimoNome: "Montenegro", cpf: "02902713207", salario: 1500, genero: .female, endereco: "Senador pompeu", dataDeNascimento: "06/12/2005", departamento: nil, projetos: nil)
+// Populando o banco com funcionarios
+
+FuncionarioManager.create(primeiroNome: "Carlos", inicialDoMeio: "M", ultimoNome: "Silva", cpf: "12345678901", salario: 4200, genero: .male, endereco: "Rua das Palmeiras", dataDeNascimento: "05/12/1985", departamento: nil, projetos: nil)
+
+FuncionarioManager.create(primeiroNome: "Marina", inicialDoMeio: "L", ultimoNome: "Souza", cpf: "98765432100", salario: 6100, genero: .female, endereco: "Av. Central, 102", dataDeNascimento: "11/30/1992", departamento: nil, projetos: nil)
+
+FuncionarioManager.create(primeiroNome: "Eduardo", inicialDoMeio: "K", ultimoNome: "Ferreira", cpf: "45678912345", salario: 5400, genero: .male, endereco: "Travessa Boa Vista", dataDeNascimento: "03/15/1978", departamento: nil, projetos: nil)
+
+// Populando o banco com departamentos
+
+DepartamentoManager.create(nome: "Marketing", projetos: [], nomeFuncionarioGerente: FuncionarioManager.funcionarios[0], numero: 856)
+
+// manipulando os projetos
+
 ProjetoManager.menuProjeto()
+
 
 
 

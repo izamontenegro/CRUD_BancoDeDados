@@ -8,8 +8,8 @@
 class DepartamentoManager {
     static var departamentos: [Departamento] = FileHelper.load(from: "departamentos.txt")
 
-    static func create(nome: String, projetos: [Projeto], nomeFuncionarioGerente: String) {        
-        let departamento = Departamento(nome: nome, projetos: projetos, funcionarioGerente: nomeFuncionarioGerente)
+    static func create(nome: String, projetos: [Projeto], nomeFuncionarioGerente: Funcionario, numero: Int) {
+        let departamento = Departamento(nome: nome, projetos: projetos, funcionarioGerente: [nomeFuncionarioGerente], numero: numero)
         departamentos.append(departamento)
         FileHelper.save(departamentos, to: "departamentos.txt")
     }
