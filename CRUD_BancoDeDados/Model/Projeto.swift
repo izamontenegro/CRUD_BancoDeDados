@@ -10,6 +10,7 @@ import Foundation
 struct Projeto: Codable {
     var nome: String
     var local: String
+    var numero: Int
     var funcionarios: [Funcionario]
 }
 
